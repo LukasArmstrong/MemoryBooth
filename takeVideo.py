@@ -14,7 +14,7 @@ STD_DIMENSIONS = {
 
 VIDEO_TYPE = {
     'avi': cv2.VideoWriter_fourcc(*'FFV1'),
-    'mp4': cv2.VideoWriter_fourcc(*'MP4V') #Look into AVdn and h.264
+    #'mp4': cv2.VideoWriter_fourcc(*'MP4V') #Look into AVdn and h.264
 }
 
 def change_res(cap, width, height):
@@ -32,27 +32,30 @@ def get_video_type(filename):
     filename, ext = os.path.splitext(filename)
     if ext in VIDEO_TYPE:
         return VIDEO_TYPE[ext]
-    return VIDEO_TYPE['mp4']
+    return VIDEO_TYPE['avi']
 
 
 home = expanduser("~")
-dir = home+'\\Videos\\MemoryBooth\\'
+dir = home+'/Videos/MemoryBooth/'
 window_name = 'Projector'
-camera_location = 0
-vidCounter = 1
+cameraID = 1
+vidCounter = 0
 vidToggle = False
 countDownTime = datetime.now()
 fileExtention = '.avi'
 filename = 'video' + fileExtention
 frames_per_second = 30.0
 res = '720p' #Work Laptop is 720p, final camera will be 1080p
-cap = cv2.VideoCapture(camera_location, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(cameraID, cv2.CAP_DSHOW)
 out = cv2.VideoWriter(
     dir+filename, get_video_type(filename), frames_per_second, get_dims(cap, res))
 
 cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
 cv2.setWindowProperty(
     window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
+if ~cap.isOpened():
+    print("Failed to grab frame")
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -62,9 +65,12 @@ while cap.isOpened():
         break
 
     if countDownTime > currentTime:
-        hsvframe = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        hsvframe[:, :, 2] -= 20
-        frame = cv2.cvtColor(hsvframe, cv2.COLOR_HSV2BGR)
+        #hsvframe = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        #hsvframe[:, :, 2] -= 20
+        #frame = cv2.cvtColor(hsvframe, cv2.COLOR_HSV2BGR)
+        floatFrame = frame.astype(np.float)
+        for i in range(1,3):
+            floatFrame = np.absolute(floatFrame[:,:,i]-20)
         remainingTimeDate = countDownTime - currentTime
         remainingTime = remainingTimeDate.seconds+1
         font = cv2.FONT_HERSHEY_TRIPLEX

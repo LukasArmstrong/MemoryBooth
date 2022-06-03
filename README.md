@@ -4,3 +4,5 @@
 - opencv-python
 - pytz
 - ffmpeg
+- pyaudio
+- moviepy?

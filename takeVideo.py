@@ -1,5 +1,10 @@
-from time import time
-import numpy as np
+"""
+# Author: Lukas Armstrong
+# Date: 06/03/22
+# Purpose: PLay around with opencv to record video
+"""
+import time
+#import numpy as np
 import os
 import cv2
 from datetime import datetime, timedelta
@@ -38,7 +43,7 @@ def get_video_type(filename):
 home = expanduser("~")
 dir = home+'/Videos/MemoryBooth/'
 window_name = 'Projector'
-cameraID = 1
+cameraID = 0
 vidCounter = 0
 vidToggle = False
 countDownTime = datetime.now()
@@ -64,22 +69,25 @@ while cap.isOpened():
         print("failed to grab frame")
         break
 
-    if countDownTime > currentTime:
-        #hsvframe = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        #hsvframe[:, :, 2] -= 20
-        #frame = cv2.cvtColor(hsvframe, cv2.COLOR_HSV2BGR)
-        floatFrame = frame.astype(np.float)
-        for i in range(1,3):
-            floatFrame = np.absolute(floatFrame[:,:,i]-20)
-        remainingTimeDate = countDownTime - currentTime
-        remainingTime = remainingTimeDate.seconds+1
-        font = cv2.FONT_HERSHEY_TRIPLEX
-        org = (520, 940)
-        fontScale = 30
-        color = (255, 255, 255)
-        thickness = 90
-        frame = cv2.putText(frame, str(remainingTime), org,
-                            font, fontScale, color, thickness)
+    
+    # if countDownTime > currentTime:
+    #     #hsvframe = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    #     #hsvframe[:, :, 2] -= 20
+    #     #frame = cv2.cvtColor(hsvframe, cv2.COLOR_HSV2BGR)
+    #     floatFrame = frame.astype(float)
+    #     for i in range(1,3):
+    #         floatFrame = np.absolute(floatFrame[:,:]-20)
+    #     floatFrame = np.clip(floatFrame,0,None)
+    #     frame = floatFrame
+    #     remainingTimeDate = countDownTime - currentTime
+    #     remainingTime = remainingTimeDate.seconds+1
+    #     font = cv2.FONT_HERSHEY_TRIPLEX
+    #     org = (520, 940)
+    #     fontScale = 30
+    #     color = (255, 255, 255)
+    #     thickness = 90
+    #     frame = cv2.putText(frame, str(remainingTime), org,
+    #                         font, fontScale, color, thickness)
     cv2.imshow(window_name, frame)
 
     if vidToggle:
